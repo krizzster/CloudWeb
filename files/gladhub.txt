@@ -1,1 +1,1 @@
-FREE-N8DYSN-JVD7LFWQLH-YEU555JCFT-YBFEX3LT
+loadstring(game:HttpGet("https://gladhub.net/loader.lua"))("FREE-N8DYSN-JVD7LFWQLH-YEU555JCFT-YBFEX3LT")
