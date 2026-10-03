@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>glad | Personal Hub</title>
+    <title>glad | Personal File Hub</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,7 +11,7 @@
     <!-- JSZip CDN for client-side ZIP bundle creation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <!-- Phosphor Icons -->
+    <!-- Phosphor Icons CDN -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
     <!-- Google Fonts -->
@@ -25,23 +25,15 @@
                         sans: ['Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
-                    colors: {
-                        glass: {
-                            50: 'rgba(255, 255, 255, 0.05)',
-                            100: 'rgba(255, 255, 255, 0.1)',
-                            200: 'rgba(255, 255, 255, 0.2)',
-                        }
-                    },
                     animation: {
-                        'blob': 'blob 10s infinite',
+                        'blob': 'blob 12s infinite ease-in-out',
                         'pulse-glow': 'pulseGlow 3s infinite',
                     },
                     keyframes: {
                         blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.08)' },
+                            '66%': { transform: 'translate(-25px, 20px) scale(0.92)' },
                         },
                         pulseGlow: {
                             '0%, 100%': { opacity: '0.4' },
@@ -60,9 +52,8 @@
             overflow-x: hidden;
         }
         
-        /* Glassmorphism panel styling */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -70,14 +61,13 @@
         }
 
         .glass-panel-highlight {
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.75) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(96, 165, 250, 0.25);
+            border: 1px solid rgba(96, 165, 250, 0.3);
             box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
         }
 
-        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -97,13 +87,13 @@
 </head>
 <body class="min-h-screen relative font-sans antialiased selection:bg-blue-500/30 pb-12">
 
+    <!-- Glowing Background Gradients -->
     <div class="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
         <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/25 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
         <div class="absolute top-[25%] right-[-5%] w-[450px] h-[450px] bg-cyan-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob" style="animation-delay: 2s;"></div>
         <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[150px] animate-blob" style="animation-delay: 4s;"></div>
     </div>
 
-    <!-- Main Container -->
     <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-10 flex flex-col gap-8 min-h-screen">
         
         <header class="flex items-center justify-between mb-2">
@@ -117,21 +107,20 @@
                     <h1 class="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-blue-200">
                         glad
                     </h1>
-                    <p class="text-xs text-slate-400 font-medium">VM Rapid Deployment Hub</p>
+                    <p class="text-xs text-slate-400 font-medium">Modular File & VM Sync Hub</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-medium text-blue-200 border border-blue-500/20">
+            <div id="statusPill" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-medium text-blue-200 border border-blue-500/20">
                 <span class="relative flex h-2 w-2">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                <span>System Online</span>
+                <span id="statusText">Loading Manifest...</span>
             </div>
         </header>
 
         <section class="glass-panel-highlight rounded-2xl p-6 relative overflow-hidden transition-all duration-300 hover:border-blue-400/40">
-            <!-- Decorative Subtle Accent Glow -->
             <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-blue-500/10 rounded-full filter blur-3xl pointer-events-none"></div>
 
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
@@ -142,10 +131,10 @@
                     <div>
                         <div class="flex items-center gap-2 mb-1">
                             <h2 class="text-xl font-bold text-white tracking-wide">CloudKriz Quick Bundle</h2>
-                            <span class="text-[10px] font-mono font-semibold bg-blue-500/30 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded-full uppercase tracking-wider">VM Auto-Pack</span>
+                            <span class="text-[10px] font-mono font-semibold bg-blue-500/30 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded-full uppercase tracking-wider">Dynamic Zip</span>
                         </div>
                         <p class="text-sm text-slate-300 leading-relaxed max-w-xl">
-                            Instant 1-click bundle generator for fast VM setup. Downloads <span class="font-mono text-blue-200 font-semibold">CloudKriz.zip</span> pre-structured for deployment.
+                            Automatically packages all files listed in your manifest into a pre-structured <span class="font-mono text-blue-200 font-semibold">CloudKriz.zip</span> archive for fast VM deployment.
                         </p>
 
                         <!-- ZIP Hierarchy Preview Badge -->
@@ -158,18 +147,20 @@
                             <div class="bg-slate-900/60 border border-white/10 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                                 <i class="ph ph-folder-open text-blue-400"></i>
                                 <span>Retro Tower Defense</span>
+                                <span id="bundleConfigCount" class="text-[10px] bg-blue-500/30 text-blue-300 px-1.5 py-0.2 rounded-md font-sans">0</span>
                             </div>
                             <span class="text-slate-500">+</span>
                             <div class="bg-slate-900/60 border border-white/10 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                                 <i class="ph ph-folder-open text-cyan-400"></i>
                                 <span>RetroTD_Macros</span>
+                                <span id="bundleMacroCount" class="text-[10px] bg-cyan-500/30 text-cyan-300 px-1.5 py-0.2 rounded-md font-sans">0</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Primary Bundle Download Button -->
-                <button id="zipBundleBtn" onclick="generateAndDownloadZip()" class="w-full md:w-auto shrink-0 px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50 transition-all border border-blue-400/40 flex items-center justify-center gap-2.5 active:scale-95 group">
+                <button id="zipBundleBtn" onclick="generateAndDownloadZip()" disabled class="w-full md:w-auto shrink-0 px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50 transition-all border border-blue-400/40 flex items-center justify-center gap-2.5 active:scale-95 group">
                     <i class="ph ph-download-simple text-xl group-hover:translate-y-0.5 transition-transform" id="zipIcon"></i>
                     <span id="zipBtnText">Download CloudKriz.zip</span>
                 </button>
@@ -178,72 +169,47 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- Card 2: Configs Folder Card -->
-            <section class="glass-panel rounded-2xl flex flex-col h-[340px] transition-all duration-300 hover:border-white/20">
+            <!-- Configs List Card -->
+            <section class="glass-panel rounded-2xl flex flex-col h-[380px] transition-all duration-300 hover:border-white/20">
                 <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
                     <div class="flex items-center gap-2.5">
                         <i class="ph ph-sliders text-blue-400 text-xl"></i>
                         <h2 class="text-base font-semibold text-white">Configs</h2>
+                        <span id="configCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-mono">0</span>
                     </div>
                     <span class="text-xs font-mono text-blue-300 bg-blue-500/20 px-2.5 py-1 rounded-md border border-blue-500/20">files/Config/</span>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto custom-scrollbar p-3">
-                    <ul class="flex flex-col gap-2">
-                        <li class="group flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] transition-all border border-white/5">
-                            <div class="flex items-center gap-3 overflow-hidden">
-                                <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:border-blue-400/40">
-                                    <i class="ph ph-file-code text-blue-400 text-lg"></i>
-                                </div>
-                                <div class="truncate">
-                                    <p class="font-medium text-slate-200 group-hover:text-white text-sm truncate">racingconfig.json</p>
-                                    <p class="text-slate-400 text-xs mt-0.5">Config File</p>
-                                </div>
-                            </div>
-                            <a href="files/Config/racingconfig.json" download class="shrink-0 ml-3 px-3 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-500 text-blue-300 hover:text-white transition-all border border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] flex items-center gap-1.5 text-xs font-medium">
-                                <i class="ph ph-download-simple text-sm"></i>
-                                <span>Download</span>
-                            </a>
-                        </li>
-                    </ul>
+                <div id="configListContainer" class="flex-1 overflow-y-auto custom-scrollbar p-3">
+                    <div class="h-full flex flex-col items-center justify-center text-slate-400 text-xs gap-2">
+                        <i class="ph ph-spinner text-blue-400 text-2xl animate-spin"></i>
+                        <span>Loading configs from manifest...</span>
+                    </div>
                 </div>
             </section>
 
-            <!-- Card 3: Macro Folder Card -->
-            <section class="glass-panel rounded-2xl flex flex-col h-[340px] transition-all duration-300 hover:border-white/20">
+            <!-- Macros List Card -->
+            <section class="glass-panel rounded-2xl flex flex-col h-[380px] transition-all duration-300 hover:border-white/20">
                 <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
                     <div class="flex items-center gap-2.5">
                         <i class="ph ph-lightning text-cyan-400 text-xl"></i>
                         <h2 class="text-base font-semibold text-white">Macros</h2>
+                        <span id="macroCountBadge" class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-mono">0</span>
                     </div>
                     <span class="text-xs font-mono text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-md border border-cyan-500/20">files/Macro/</span>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto custom-scrollbar p-3">
-                    <ul class="flex flex-col gap-2">
-                        <li class="group flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] transition-all border border-white/5">
-                            <div class="flex items-center gap-3 overflow-hidden">
-                                <div class="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-400/40">
-                                    <i class="ph ph-file-code text-cyan-400 text-lg"></i>
-                                </div>
-                                <div class="truncate">
-                                    <p class="font-medium text-slate-200 group-hover:text-white text-sm truncate">racing.json</p>
-                                    <p class="text-slate-400 text-xs mt-0.5">Macro File</p>
-                                </div>
-                            </div>
-                            <a href="files/Macro/racing.json" download class="shrink-0 ml-3 px-3 py-2 rounded-lg bg-cyan-600/20 hover:bg-cyan-500 text-cyan-300 hover:text-white transition-all border border-cyan-500/30 hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] flex items-center gap-1.5 text-xs font-medium">
-                                <i class="ph ph-download-simple text-sm"></i>
-                                <span>Download</span>
-                            </a>
-                        </li>
-                    </ul>
+                <div id="macroListContainer" class="flex-1 overflow-y-auto custom-scrollbar p-3">
+                    <div class="h-full flex flex-col items-center justify-center text-slate-400 text-xs gap-2">
+                        <i class="ph ph-spinner text-cyan-400 text-2xl animate-spin"></i>
+                        <span>Loading macros from manifest...</span>
+                    </div>
                 </div>
             </section>
 
         </div>
 
         <section class="glass-panel rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:border-white/20">
-            <!-- Header -->
             <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02] flex-wrap gap-3">
                 <div class="flex items-center gap-3">
                     <i class="ph ph-file-text text-indigo-400 text-xl"></i>
@@ -264,7 +230,6 @@
                 </div>
             </div>
             
-            <!-- Dynamic Text Display Box -->
             <div class="p-5 relative">
                 <pre id="gladhubContent" class="font-mono text-xs sm:text-sm text-slate-300 bg-slate-950/60 p-4 rounded-xl border border-white/5 whitespace-pre-wrap break-all max-h-64 overflow-y-auto custom-scrollbar leading-relaxed">
 <div class="flex items-center gap-2 text-slate-400 animate-pulse">
@@ -275,50 +240,154 @@
             </div>
         </section>
 
-        <footer class="mt-auto text-center py-4 text-slate-500 text-xs">
-            <p>glad Personal File Hub • CloudKriz Auto-Bundler Enabled</p>
+        <footer class="mt-auto text-center py-4 text-slate-500 text-xs flex flex-col gap-1">
+            <p>glad Modular File Hub • Dynamic Auto-Manifest Powered</p>
+            <p class="text-[11px] text-slate-600">Syncs automatically with <code class="font-mono text-slate-500">files/manifest.json</code></p>
         </footer>
     </div>
 
     <script>
-        // List of files to include in the bundle
-        const configFiles = [
-            { path: 'files/Config/racingconfig.json', name: 'racingconfig.json' }
-        ];
-
-        const macroFiles = [
-            { path: 'files/Macro/racing.json', name: 'racing.json' }
-        ];
+        // State holding active files dynamically populated from manifest.json
+        let manifestData = {
+            configs: [],
+            macros: []
+        };
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetchGladhubTxt();
+            initializeHub();
         });
 
-        // Dynamic gladhub.txt fetcher
-        async function fetchGladhubTxt() {
-            const contentContainer = document.getElementById('gladhubContent');
-            const copyBtn = document.getElementById('copyBtn');
+        async function initializeHub() {
+            await Promise.all([
+                loadManifest(),
+                fetchGladhubTxt()
+            ]);
+        }
+
+        async function loadManifest() {
+            const statusText = document.getElementById('statusText');
+            const zipBtn = document.getElementById('zipBundleBtn');
 
             try {
-                const response = await fetch('files/gladhub.txt', { cache: 'no-cache' });
+                const response = await fetch('files/manifest.json', { cache: 'no-cache' });
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`Manifest not found (${response.status})`);
                 }
 
-                const textData = await response.text();
+                const rawJson = await response.json();
                 
-                if (textData.trim().length === 0) {
-                    contentContainer.textContent = '[files/gladhub.txt is currently empty]';
-                } else {
-                    contentContainer.textContent = textData;
-                    copyBtn.disabled = false;
+                // Process and normalize manifest structure (supports string arrays or object arrays)
+                manifestData.configs = normalizeFileList(rawJson.configs, 'files/Config/');
+                manifestData.macros = normalizeFileList(rawJson.macros, 'files/Macro/');
+
+                // Update Badges & Status
+                document.getElementById('configCountBadge').innerText = manifestData.configs.length;
+                document.getElementById('macroCountBadge').innerText = manifestData.macros.length;
+                document.getElementById('bundleConfigCount').innerText = manifestData.configs.length;
+                document.getElementById('bundleMacroCount').innerText = manifestData.macros.length;
+
+                statusText.innerText = "Manifest Synced";
+
+                // Render dynamic card items
+                renderFileList('configListContainer', manifestData.configs, 'blue');
+                renderFileList('macroListContainer', manifestData.macros, 'cyan');
+
+                // Enable zip button if files exist
+                if (manifestData.configs.length > 0 || manifestData.macros.length > 0) {
+                    zipBtn.disabled = false;
                 }
+
             } catch (error) {
-                console.error('Error fetching files/gladhub.txt:', error);
-                contentContainer.innerHTML = `<span class="text-amber-400">Unable to load files/gladhub.txt directly.</span>\n` +
-                    `<span class="text-slate-400">If testing locally via file://, browser security restrictions block raw fetch.\n` +
-                    `When deployed on Vercel, the contents of files/gladhub.txt will automatically populate here.</span>`;
+                console.warn('Manifest load error:', error);
+                statusText.innerText = "Manifest Missing";
+                
+                showManifestErrorFallback('configListContainer', 'Configs');
+                showManifestErrorFallback('macroListContainer', 'Macros');
+            }
+        }
+
+        // Helper to handle both simple string array ["file1.json"] and object array [{"name":"file1.json","path":"..."}]
+        function normalizeFileList(list, defaultFolder) {
+            if (!Array.isArray(list)) return [];
+            return list.map(item => {
+                if (typeof item === 'string') {
+                    const fileName = item.split('/').pop();
+                    return { name: fileName, path: `${defaultFolder}${fileName}` };
+                } else if (item && typeof item === 'object') {
+                    const name = item.name || item.path.split('/').pop();
+                    const path = item.path || `${defaultFolder}${name}`;
+                    return { name, path };
+                }
+                return null;
+            }).filter(Boolean);
+        }
+
+        function renderFileList(containerId, fileList, colorScheme) {
+            const container = document.getElementById(containerId);
+            
+            if (fileList.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-slate-500 text-xs py-8">
+                        <i class="ph ph-folder-open text-2xl mb-1 opacity-50"></i>
+                        <span>No files listed in manifest</span>
+                    </div>`;
+                return;
+            }
+
+            const isBlue = colorScheme === 'blue';
+            const iconBg = isBlue ? 'bg-blue-500/10 border-blue-500/20' : 'bg-cyan-500/10 border-cyan-500/20';
+            const iconColor = isBlue ? 'text-blue-400' : 'text-cyan-400';
+            const btnClass = isBlue 
+                ? 'bg-blue-600/20 hover:bg-blue-500 text-blue-300 hover:text-white border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)]'
+                : 'bg-cyan-600/20 hover:bg-cyan-500 text-cyan-300 hover:text-white border-cyan-500/30 hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]';
+
+            let html = '<ul class="flex flex-col gap-2">';
+            fileList.forEach(file => {
+                const iconClass = getFileIcon(file.name);
+                html += `
+                    <li class="group flex items-center justify-between p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] transition-all border border-white/5">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0 border">
+                                <i class="${iconClass} ${iconColor} text-lg"></i>
+                            </div>
+                            <div class="truncate">
+                                <p class="font-medium text-slate-200 group-hover:text-white text-xs sm:text-sm truncate">${file.name}</p>
+                                <p class="text-slate-500 text-[11px] font-mono mt-0.5 truncate">${file.path}</p>
+                            </div>
+                        </div>
+                        <a href="${file.path}" download class="shrink-0 ml-3 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border flex items-center gap-1.5 ${btnClass}">
+                            <i class="ph ph-download-simple text-sm"></i>
+                            <span class="hidden sm:inline">Download</span>
+                        </a>
+                    </li>`;
+            });
+            html += '</ul>';
+
+            container.innerHTML = html;
+        }
+
+        function showManifestErrorFallback(containerId, category) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="h-full flex flex-col items-center justify-center text-center p-4">
+                    <i class="ph ph-warning-circle text-amber-400 text-2xl mb-2"></i>
+                    <p class="text-slate-300 text-xs font-semibold">Missing files/manifest.json</p>
+                    <p class="text-slate-500 text-[11px] mt-1 max-w-xs">
+                        Create a <code class="font-mono text-slate-400">files/manifest.json</code> in your repo to automatically list all your ${category}.
+                    </p>
+                </div>`;
+        }
+
+        function getFileIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            switch (ext) {
+                case 'json': return 'ph ph-brackets-curly';
+                case 'ahk': return 'ph ph-terminal-window';
+                case 'lua': return 'ph ph-code';
+                case 'txt': return 'ph ph-file-text';
+                case 'zip': case 'rar': return 'ph ph-file-zip';
+                default: return 'ph ph-file-code';
             }
         }
 
@@ -327,7 +396,11 @@
             const zipIcon = document.getElementById('zipIcon');
             const zipBtnText = document.getElementById('zipBtnText');
 
-            // UI Loading state
+            if (manifestData.configs.length === 0 && manifestData.macros.length === 0) {
+                return;
+            }
+
+            // Set Loading UI
             zipBtn.disabled = true;
             zipBtn.classList.add('opacity-80', 'cursor-not-allowed');
             zipIcon.className = "ph ph-spinner text-xl animate-spin";
@@ -336,55 +409,51 @@
             try {
                 const zip = new JSZip();
 
-                // 1. Create the main parent folder: GladHub
+                // Build root GladHub folder and subfolders
                 const gladHubFolder = zip.folder("GladHub");
-
-                // 2. Create the two requested subfolders inside GladHub
                 const retroTDFolder = gladHubFolder.folder("Retro Tower Defense");
                 const retroMacrosFolder = gladHubFolder.folder("RetroTD_Macros");
 
-                // 3. Fetch and attach Config files to GladHub/Retro Tower Defense/
-                for (const file of configFiles) {
+                // Fetch & attach Configs into GladHub/Retro Tower Defense/
+                for (const file of manifestData.configs) {
                     try {
                         const res = await fetch(file.path, { cache: 'no-cache' });
                         if (res.ok) {
                             const blob = await res.blob();
                             retroTDFolder.file(file.name, blob);
                         } else {
-                            // Fallback dummy file content if fetch fails during development preview
-                            retroTDFolder.file(file.name, JSON.stringify({ note: "Config file placeholder" }, null, 2));
+                            retroTDFolder.file(file.name, `// Error fetching ${file.name}`);
                         }
                     } catch (e) {
-                        retroTDFolder.file(file.name, JSON.stringify({ note: "Config file placeholder" }, null, 2));
+                        retroTDFolder.file(file.name, `// Error fetching ${file.name}`);
                     }
                 }
 
-                // 4. Fetch and attach Macro files to GladHub/RetroTD_Macros/
-                for (const file of macroFiles) {
+                // Fetch & attach Macros into GladHub/RetroTD_Macros/
+                for (const file of manifestData.macros) {
                     try {
                         const res = await fetch(file.path, { cache: 'no-cache' });
                         if (res.ok) {
                             const blob = await res.blob();
                             retroMacrosFolder.file(file.name, blob);
                         } else {
-                            retroMacrosFolder.file(file.name, JSON.stringify({ note: "Macro file placeholder" }, null, 2));
+                            retroMacrosFolder.file(file.name, `// Error fetching ${file.name}`);
                         }
                     } catch (e) {
-                        retroMacrosFolder.file(file.name, JSON.stringify({ note: "Macro file placeholder" }, null, 2));
+                        retroMacrosFolder.file(file.name, `// Error fetching ${file.name}`);
                     }
                 }
 
-                // Update UI: Zipping
-                zipBtnText.innerText = "Building CloudKriz.zip...";
+                zipBtnText.innerText = "Compressing CloudKriz.zip...";
 
-                // Generate ZIP blob
+                // Generate ZIP
                 const zipContent = await zip.generateAsync({ 
                     type: "blob",
                     compression: "DEFLATE",
                     compressionOptions: { level: 6 }
                 });
 
-                // Trigger automatic download
+                // Trigger Download
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(zipContent);
                 link.download = "CloudKriz.zip";
@@ -417,6 +486,32 @@
             }
         }
 
+        async function fetchGladhubTxt() {
+            const contentContainer = document.getElementById('gladhubContent');
+            const copyBtn = document.getElementById('copyBtn');
+
+            try {
+                const response = await fetch('files/gladhub.txt', { cache: 'no-cache' });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const textData = await response.text();
+                
+                if (textData.trim().length === 0) {
+                    contentContainer.textContent = '[files/gladhub.txt is currently empty]';
+                } else {
+                    contentContainer.textContent = textData;
+                    copyBtn.disabled = false;
+                }
+            } catch (error) {
+                contentContainer.innerHTML = `<span class="text-amber-400">Unable to load files/gladhub.txt directly.</span>\n` +
+                    `<span class="text-slate-400">If testing locally via file://, browser security restrictions block raw fetch.\n` +
+                    `When hosted on Vercel, the raw content of files/gladhub.txt will dynamically populate here.</span>`;
+            }
+        }
+
         function copyContent() {
             const content = document.getElementById('gladhubContent').innerText;
             const copyBtn = document.getElementById('copyBtn');
@@ -427,8 +522,7 @@
 
             navigator.clipboard.writeText(content).then(() => {
                 showCopySuccess();
-            }).catch(err => {
-                // Fallback execution
+            }).catch(() => {
                 const textArea = document.createElement("textarea");
                 textArea.value = content;
                 document.body.appendChild(textArea);
@@ -436,9 +530,7 @@
                 try {
                     document.execCommand('copy');
                     showCopySuccess();
-                } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                }
+                } catch (e) {}
                 document.body.removeChild(textArea);
             });
 
