@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://gladhub.net/loader.lua"))("FREE-WB4S2R-52C7WP3PQD-4CRRDX8MSW-UNR7PZE8")
+loadstring(game:HttpGet("https://gladhub.net/loader.lua"))("FREE-KE67CS-KS7MCT76TM-TR4XPKD4HH-NYXE6DK5")
