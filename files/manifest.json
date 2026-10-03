@@ -1,0 +1,10 @@
+{
+  "configs": [
+    "racingconfig.json",
+    "ravewaytraits.json"
+  ],
+  "macros": [
+    "racing.json",
+    "racingtraits.json"
+  ]
+}
