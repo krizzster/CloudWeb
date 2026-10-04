@@ -1,10 +1,12 @@
 {
   "configs": [
     "racingconfig.json",
-    "ravewaytraits.json"
+    "ravewaytraits.json",
+    "ravewaytraitmodel3.json"
   ],
   "macros": [
     "racing.json",
-    "racingtraits.json"
+    "racingtraits.json",
+    "ravewaygrind2.json"
   ]
 }
