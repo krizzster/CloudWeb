@@ -1,247 +1,359 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudKriz - Macro & Script Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        glass: {
-                            bg: 'rgba(15, 23, 42, 0.75)',
-                            border: 'rgba(56, 189, 248, 0.2)',
-                            hover: 'rgba(30, 41, 59, 0.85)'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Glad - Alliance Macro & Script</title>
+    <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --bg-grad-1: #0f172a;
+            --bg-grad-2: #1e1b4b;
+            --bg-grad-3: #0284c7;
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-card: rgba(255, 255, 255, 0.04);
+            --glass-card-hover: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --accent-green: #10b981;
+            --code-bg: rgba(2, 6, 23, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, var(--bg-grad-2) 0%, var(--bg-grad-1) 50%, #030712 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
         }
-        .font-mono-code {
-            font-family: 'JetBrains Mono', monospace;
+
+        /* Ambient Glow Background Effects */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
         }
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.75);
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header Styling */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.25rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        .custom-scrollbar::-webkit-scrollbar {
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .brand-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: var(--accent-blue);
+            padding: 0.4rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+
+        /* Container Card Styling */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .card-title i {
+            color: var(--accent-blue);
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            color: #ffffff;
+            border: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+            background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
+        }
+
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+
+        .btn-copy.copied {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Code/Text Viewer Box */
+        .code-box {
+            background: var(--code-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+            max-height: 280px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Custom Scrollbar */
+        .code-box::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 4px;
+
+        .code-box::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(56, 189, 248, 0.3);
-            border-radius: 4px;
+
+        .code-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(56, 189, 248, 0.5);
+
+        .code-box::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
+
+            header {
+                padding: 1rem 1.25rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-copy {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+<body>
 
-    <header class="w-full border-b border-blue-500/20 glass-panel sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                    <span class="text-white font-bold text-xl tracking-wider">G</span>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-cloud"></i>
                 </div>
-                <div>
-                    <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 via-cyan-300 to-white bg-clip-text text-transparent tracking-tight">glad</span>
-                    <span class="text-xs uppercase px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 font-semibold ml-2 inline-block">File Hub</span>
-                </div>
+                <div class="brand-name">glad</div>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="hidden sm:flex items-center space-x-2 text-xs text-slate-400 bg-slate-900/60 px-3 py-1.5 rounded-full border border-slate-800">
-                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Systems Online</span>
-                </div>
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Alliance Setup
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="flex-grow max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
-        
-        <!-- Hero Section -->
-        <div class="text-center space-y-3">
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">CloudKriz Macro & Script Redirect</h1>
-            <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                Access your designated JSON macro data and execution scripts below. Click copy to instantly grab your code for deployment.
-            </p>
-        </div>
-
-        <!-- Container 1: JSON Macro Data -->
-        <section class="glass-panel rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:border-blue-500/40">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-800/80 gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span>Container 1</span>
-                            <span class="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono">JSON Macro Data</span>
-                        </h2>
-                        <p class="text-xs text-slate-400">"crazy toilet" action sequence layout</p>
-                    </div>
+        <!-- Container 1: Macro JSON Data -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-code"></i>
+                    <span>Macro Data (JSON)</span>
                 </div>
-                <button onclick="copyToClipboard('json-content', this)" class="relative inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-lg shadow-blue-500/25 active:scale-95 transition-all duration-200 group cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    <span class="btn-text">Copy JSON</span>
+                <button class="btn-copy" onclick="copyToClipboard('macro-data', this)">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy JSON</span>
                 </button>
             </div>
-            
-            <div class="relative rounded-xl bg-slate-950/80 border border-slate-800 p-4 font-mono-code text-xs sm:text-sm text-slate-300 overflow-x-auto custom-scrollbar max-h-72">
-                <pre id="json-content">{"Name":"crazy toilet","Actions":[{"i":1,"p":[-31.09042739868164,-4.8082709312438969,-15.15259838104248],"t":"P","d":8.100932359695435,"n":"Dark Speaker Man"},{"i":1,"t":"U","d":0.7493870258331299},{"i":2,"p":[-27.449424743652345,-4.808271884918213,-15.452271461486817],"t":"P","d":9.682374715805054,"n":"Dark Speaker Man"},{"i":2,"t":"U","d":0.7986447811126709},{"i":3,"p":[-31.286190032958986,-4.808272838592529,-11.643357276916504],"t":"P","d":12.368987798690796,"n":"Dark Speaker Man"},{"i":3,"t":"U","d":1.196485996246338},{"i":4,"p":[-23.9440975189209,-4.808271884918213,-16.3214111328125],"t":"P","d":1.9222397804260255,"n":"Dark Speaker Man"},{"i":4,"t":"U","d":0.6765871047973633},{"i":4,"t":"U","d":4.817239046096802},{"i":5,"p":[-30.40109634399414,-1.663090705871582,-7.341348648071289],"t":"P","d":36.737536907196048,"n":"Titan Cinema Man"},{"i":5,"t":"U","d":19.21113348007202},{"i":5,"t":"U","d":12.665459871292115},{"d":22.77434229850769,"t":"W"},{"i":5,"t":"U","d":1.0217492580413819},{"i":6,"p":[-25.283153533935548,-1.663090705871582,-8.022904396057129],"t":"P","d":12.589293479919434,"n":"Titan Cinema Man"},{"i":6,"t":"U","d":4.360431432723999},{"i":6,"t":"U","d":8.019662857055664},{"i":6,"t":"U","d":15.400184154510498},{"i":7,"p":[-22.638591766357423,-4.456315040588379,-3.047356605529785],"t":"P","d":15.424400329589844,"n":"DJ Speaker Man"},{"i":7,"t":"U","d":1.2941582202911378},{"i":7,"t":"U","d":2.2462658882141115},{"i":7,"t":"U","d":6.078671216964722},{"i":8,"p":[-20.16840362548828,-1.663090705871582,-8.365849494934082],"t":"P","d":21.725473880767824,"n":"Titan Cinema Man"},{"i":8,"t":"U","d":1.1505656242370606},{"i":8,"t":"U","d":0.25731635093688967},{"i":8,"t":"U","d":5.089088439941406},{"i":8,"t":"U","d":6.181461334228516},{"i":9,"p":[-19.789018630981447,-1.6630887985229493,-17.826053619384767],"t":"P","d":13.743453741073609,"n":"Titan Cinema Man"},{"i":9,"t":"U","d":1.4967093467712403},{"i":9,"t":"U","d":0.18455958366394044},{"i":9,"t":"U","d":0.10979962348937988},{"i":9,"t":"U","d":7.092500686645508},{"i":9,"t":"U","d":0.17468476295471192},{"i":9,"t":"U","d":0.18115973472595216},{"i":9,"t":"U","d":6.715881586074829}]}</pre>
-            </div>
-        </section>
+            <pre class="code-box" id="macro-data">[{"i":1,"p":[-30.804685592651368,-4.174002647399902,-14.414183616638184],"t":"P","d":3.490778207778931,"n":"Pirate Large TV Man"},{"i":2,"p":[-25.70675277709961,-4.174002647399902,-14.644207954406739],"t":"P","d":8.884286165237427,"n":"Pirate Large TV Man"},{"i":3,"p":[-30.90632438659668,-4.174002647399902,-9.352164268493653],"t":"P","d":6.493825197219849,"n":"Pirate Large TV Man"},{"i":4,"p":[-25.826112747192384,-4.174001693725586,-9.609200477600098],"t":"P","d":2.9287519454956056,"n":"Pirate Large TV Man"},{"i":2,"t":"U","d":2.1046535968780519},{"i":1,"t":"U","d":1.095221757888794},{"i":3,"t":"U","d":1.1742911338806153},{"i":4,"t":"U","d":2.4603848457336427},{"i":5,"p":[-20.653884887695314,-4.174003601074219,-14.902148246765137],"t":"P","d":3.7928104400634767,"n":"Pirate Large TV Man"},{"i":5,"t":"U","d":0.6191737651824951},{"i":6,"p":[-20.189687728881837,-4.456315994262695,-9.386636734008789],"t":"P","d":5.814904451370239,"n":"DJ Speaker Man"},{"i":6,"t":"U","d":5.050253391265869},{"i":6,"t":"U","d":4.405591011047363},{"i":6,"t":"U","d":4.214543581008911},{"i":7,"p":[-15.385369300842286,-4.174002647399902,-13.924956321716309],"t":"P","d":4.190327167510986,"n":"Pirate Large TV Man"},{"i":7,"t":"U","d":0.6027963161468506},{"i":8,"p":[-14.187780380249024,-4.174001693725586,-8.752236366271973],"t":"P","d":1.9643664360046387,"n":"Pirate Large TV Man"},{"i":8,"t":"U","d":0.20277762413024903},{"i":9,"p":[-14.741494178771973,-4.174002647399902,-1.7454805374145508],"t":"P","d":2.547952651977539,"n":"Pirate Large TV Man"},{"i":9,"t":"U","d":0.5141794681549072},{"d":1.431609869003296,"t":"W"},{"i":10,"p":[-19.850183486938478,-4.174002647399902,-1.8737068176269532],"t":"P","d":1.0320937633514405,"n":"Pirate Large TV Man"},{"i":10,"t":"U","d":2.51697039604187},{"i":11,"p":[-24.889575958251954,-4.174002647399902,-1.7454829216003419],"t":"P","d":3.79771089553833,"n":"Pirate Large TV Man"},{"i":11,"t":"U","d":0.5171642303466797},{"i":12,"p":[-30.132186889648439,-4.174003601074219,-1.8222894668579102],"t":"P","d":2.540341377258301,"n":"Pirate Large TV Man"},{"i":12,"t":"U","d":0.6222124099731445},{"i":13,"p":[-35.16044998168945,-4.174003601074219,-1.9253020286560059],"t":"P","d":3.576728105545044,"n":"Pirate Large TV Man"},{"i":13,"t":"U","d":0.5091688632965088},{"i":14,"p":[-14.444814682006836,-4.174002647399902,3.4153666496276857],"t":"P","d":3.2933740615844728,"n":"Pirate Large TV Man"},{"i":14,"t":"U","d":0.6779570579528809},{"i":15,"p":[-19.594297409057618,-4.174002647399902,3.393749713897705],"t":"P","d":3.163034677505493,"n":"Pirate Large TV Man"},{"i":15,"t":"U","d":0.49242568016052248},{"i":16,"p":[-36.5207405090332,-4.174002647399902,-11.547356605529786],"t":"P","d":4.175622940063477,"n":"Pirate Large TV Man"},{"i":16,"t":"U","d":0.4330766201019287},{"i":1,"t":"U","d":1.7482647895812989},{"i":1,"t":"U","d":0.27332210540771487},{"i":1,"t":"U","d":0.28830957412719729},{"i":2,"t":"U","d":0.8467135429382324},{"i":2,"t":"U","d":0.5366451740264893},{"i":2,"t":"U","d":0.22229480743408204},{"i":5,"t":"U","d":0.6778314113616943},{"i":5,"t":"U","d":0.20290017127990724},{"i":5,"t":"U","d":0.16102838516235352},{"i":17,"p":[-37.10179138183594,-4.174002647399902,-6.538138389587402],"t":"P","d":5.314521074295044,"n":"Pirate Large TV Man"},{"i":17,"t":"U","d":0.7114715576171875},{"d":2.0079476833343508,"t":"W"},{"i":7,"t":"U","d":3.003054618835449},{"i":7,"t":"U","d":0.20163559913635255},{"i":7,"t":"U","d":0.4160573482513428},{"i":3,"t":"U","d":2.755121946334839},{"i":3,"t":"U","d":0.2956104278564453},{"i":3,"t":"U","d":0.4265556335449219},{"i":3,"t":"U","d":0.24552512168884278},{"i":4,"t":"U","d":0.7561354637145996},{"i":4,"t":"U","d":0.22073745727539063},{"i":4,"t":"U","d":0.1402745246887207},{"i":4,"t":"U","d":3.121244192123413},{"i":4,"t":"U","d":0.5186100006103516},{"i":4,"t":"U","d":2.9601426124572756},{"i":8,"t":"U","d":3.8930721282958986},{"i":8,"t":"U","d":0.4015965461730957},{"i":8,"t":"U","d":0.6201229095458984},{"i":8,"t":"U","d":2.2110519409179689},{"i":16,"t":"U","d":3.421260118484497},{"i":16,"t":"U","d":0.24792981147766114},{"i":16,"t":"U","d":0.43718862533569338},{"i":17,"t":"U","d":1.2425146102905274},{"i":17,"t":"U","d":0.19403982162475587},{"i":17,"t":"U","d":0.20331287384033204},{"i":17,"t":"U","d":2.88617205619812},{"i":17,"t":"U","d":0.741957426071167},{"i":13,"t":"U","d":2.212907552719116},{"i":13,"t":"U","d":0.40859150886535647},{"i":13,"t":"U","d":0.5089316368103027},{"i":13,"t":"U","d":3.2207014560699465},{"i":12,"t":"U","d":2.280062675476074},{"i":12,"t":"U","d":0.3435368537902832},{"i":12,"t":"U","d":3.231203079223633},{"i":18,"p":[-34.475494384765628,-4.174001693725586,3.294658660888672],"t":"P","d":3.6075656414031984,"n":"Pirate Large TV Man"},{"i":18,"t":"U","d":0.546436071395874},{"i":18,"t":"U","d":0.39275550842285159},{"i":18,"t":"U","d":0.3200066089630127},{"i":18,"t":"U","d":0.36503148078918459},{"i":18,"t":"U","d":0.6577122211456299},{"i":12,"t":"U","d":3.2363462448120119},{"i":11,"t":"U","d":1.6477549076080323},{"i":11,"t":"U","d":1.4755780696868897},{"i":11,"t":"U","d":3.1665220260620119},{"i":10,"t":"U","d":1.9612302780151368},{"i":10,"t":"U","d":0.4184224605560303},{"i":10,"t":"U","d":1.6358115673065186},{"i":10,"t":"U","d":2.812819004058838},{"i":9,"t":"U","d":1.5387413501739503},{"i":9,"t":"U","d":0.3445403575897217},{"i":9,"t":"U","d":1.9773736000061036},{"i":9,"t":"U","d":2.8262455463409426},{"i":14,"t":"U","d":2.0568902492523195},{"i":14,"t":"U","d":0.5256640911102295},{"i":14,"t":"U","d":0.3460066318511963},{"i":14,"t":"U","d":1.8063976764678956},{"i":15,"t":"U","d":6.092954635620117},{"i":15,"t":"U","d":0.5985748767852783},{"i":15,"t":"U","d":0.645709753036499}]</pre>
+        </div>
 
-        <!-- Container 2: Lua Script -->
-        <section class="glass-panel rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:border-blue-500/40">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-800/80 gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span>Container 2</span>
-                            <span class="text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">Lua Script</span>
-                        </h2>
-                        <p class="text-xs text-slate-400">EZVC-Hub execution & auto-vote script</p>
-                    </div>
+        <!-- Container 2: Luau Loader Script -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span>Luau Loader Script</span>
                 </div>
-                <button onclick="copyToClipboard('lua-content', this)" class="relative inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg shadow-cyan-500/25 active:scale-95 transition-all duration-200 group cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    <span class="btn-text">Copy Script</span>
+                <button class="btn-copy" onclick="copyToClipboard('luau-script', this)">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy Script</span>
                 </button>
             </div>
-            
-            <div class="relative rounded-xl bg-slate-950/80 border border-slate-800 p-4 font-mono-code text-xs sm:text-sm text-cyan-200 overflow-x-auto custom-scrollbar max-h-72">
-                <pre id="lua-content">-- Execute the external hub script
-task.spawn(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/kacperDev18/EZVC-Hub/refs/heads/main/ezvchub91.lua"))()
-end)
+            <pre class="code-box" id="luau-script">loadstring(game:HttpGet("https://raw.githubusercontent.com/kacperDev18/EZVC-Hub18/refs/heads/main/ezvc_v221_obf_full.lua"))()</pre>
+        </div>
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local voteRemote = ReplicatedStorage:WaitForChild("ModeVote"):WaitForChild("Vote")
-
--- Fire the vote event
-local function autoVoteCrazy()
-    if voteRemote then
-        voteRemote:FireServer("Crazy")
-    end
-end
-
-autoVoteCrazy()</pre>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="w-full border-t border-blue-500/10 py-6 text-center text-xs text-slate-500 mt-auto">
-        <p>&copy; 2026 CloudKriz / Glad File Hub. All rights reserved.</p>
-    </footer>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2 bg-emerald-500 text-slate-950 font-semibold px-4 py-3 rounded-xl shadow-xl shadow-emerald-500/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-        <span id="toast-msg">Copied successfully!</span>
+        <footer>
+            CloudKriz Private Suite &bull; Hosted on GitHub / Vercel
+        </footer>
     </div>
 
     <script>
         function copyToClipboard(elementId, btnElement) {
             const textToCopy = document.getElementById(elementId).innerText;
             
-            // Fallback compatible clipboard execution
-            const textArea = document.createElement("textarea");
-            textArea.value = textToCopy;
-            textArea.style.position = "fixed";  // Avoid scrolling to bottom
-            textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.opacity = "0";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showCopiedFeedback(btnElement);
-                } else {
-                    showToast("Failed to copy", true);
-                }
-            } catch (err) {
-                showToast("Error copying to clipboard", true);
-            }
-            
-            document.body.removeChild(textArea);
-        }
-
-        function showCopiedFeedback(btnElement) {
-            const btnText = btnElement.querySelector('.btn-text');
-            const originalText = btnText.innerText;
-            
-            btnElement.classList.add('from-emerald-600', 'to-teal-500', 'shadow-emerald-500/25');
-            btnElement.classList.remove('from-blue-600', 'to-cyan-500', 'shadow-blue-500/25', 'from-cyan-600', 'to-blue-600', 'shadow-cyan-500/25');
-            btnText.innerText = "Copied!";
-            
-            showToast("Copied to clipboard!");
-
-            setTimeout(() => {
-                btnElement.classList.remove('from-emerald-600', 'to-teal-500', 'shadow-emerald-500/25');
-                btnElement.classList.add('from-blue-600', 'to-cyan-500', 'shadow-blue-500/25');
-                btnText.innerText = originalText;
-            }, 2000);
-        }
-
-        function showToast(message, isError = false) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-msg');
-            toastMsg.innerText = message;
-            
-            if (isError) {
-                toast.classList.remove('bg-emerald-500');
-                toast.classList.add('bg-rose-500', 'text-white');
-            } else {
-                toast.classList.remove('bg-rose-500', 'text-white');
-                toast.classList.add('bg-emerald-500', 'text-slate-950');
-            }
-            
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const icon = btnElement.querySelector('i');
+                const label = btnElement.querySelector('span');
+                
+                // Active feedback state
+                btnElement.classList.add('copied');
+                icon.className = 'fa-solid fa-check';
+                label.innerText = 'Copied!';
+                
+                setTimeout(() => {
+                    btnElement.classList.remove('copied');
+                    icon.className = 'fa-regular fa-copy';
+                    label.innerText = elementId === 'macro-data' ? 'Copy JSON' : 'Copy Script';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
         }
     </script>
 </body>
